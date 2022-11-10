@@ -1,18 +1,26 @@
 package com.udacity.project4.atef.authentication
 
+import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.firebase.ui.auth.AuthMethodPickerLayout
 import com.firebase.ui.auth.AuthUI
 import com.udacity.project4.atef.R
+import com.udacity.project4.atef.locationreminders.RemindersActivity
+import com.udacity.project4.atef.utils.Config
 import com.udacity.project4.atef.utils.Config.SIGN_IN_INTENT_RESULT_CODE
+import org.koin.android.ext.android.inject
 
 /**
  * This class should be the starting point of the app, It asks the users to sign in / register, and redirects the
  * signed in users to the RemindersActivity.
  */
 class AuthenticationActivity : AppCompatActivity() {
+
+    private val authenticationViewModel by inject<AuthenticationViewModel>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,14 +29,17 @@ class AuthenticationActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btnSignIn).setOnClickListener { launchGoogleSignInIntent() }
 
 
-
-//         TODO: Implement the create account and sign in using FirebaseUI, use sign in using email and sign in using Google
-
-//          TODO: If the user was authenticated, send him to RemindersActivity
-
-//          TODO: a bonus is to customize the sign in flow to look nice using :
-        //https://github.com/firebase/FirebaseUI-Android/blob/master/auth/README.md#custom-layout
-
+        authenticationViewModel.authenticationState.observe(this, Observer { state->
+            when(state){
+                Config.AuthenticationState.AUTHENTICATED->{
+                    val reminderIntent=Intent(this, RemindersActivity::class.java)
+                    startActivity(reminderIntent)
+                }
+                else->{
+                    Log.e("FirebaseAuthState", "User not authenticated: $state")
+                }
+            }
+        })
     }
 
     private fun launchGoogleSignInIntent() {
