@@ -1,5 +1,6 @@
 package com.udacity.project4.atef.authentication
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import com.firebase.ui.auth.AuthMethodPickerLayout
 import com.firebase.ui.auth.AuthUI
+import com.firebase.ui.auth.IdpResponse
 import com.udacity.project4.atef.R
 import com.udacity.project4.atef.locationreminders.RemindersActivity
 import com.udacity.project4.atef.utils.Config
@@ -32,14 +34,18 @@ class AuthenticationActivity : AppCompatActivity() {
         authenticationViewModel.authenticationState.observe(this, Observer { state->
             when(state){
                 Config.AuthenticationState.AUTHENTICATED->{
-                    val reminderIntent=Intent(this, RemindersActivity::class.java)
-                    startActivity(reminderIntent)
+                    goToReminderActivity()
                 }
                 else->{
                     Log.e("FirebaseAuthState", "User not authenticated: $state")
                 }
             }
         })
+    }
+
+    private fun goToReminderActivity() {
+        val reminderIntent = Intent(this, RemindersActivity::class.java)
+        startActivity(reminderIntent)
     }
 
     private fun launchGoogleSignInIntent() {
@@ -57,5 +63,17 @@ class AuthenticationActivity : AppCompatActivity() {
             .build()
 
         startActivityForResult(signInIntent, SIGN_IN_INTENT_RESULT_CODE)
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == SIGN_IN_INTENT_RESULT_CODE) {
+            val response = IdpResponse.fromResultIntent(data)
+            if (resultCode == Activity.RESULT_OK) {
+                goToReminderActivity()
+            } else {
+                Log.e("Authentication Error", response?.error.toString())
+            }
+        }
     }
 }
