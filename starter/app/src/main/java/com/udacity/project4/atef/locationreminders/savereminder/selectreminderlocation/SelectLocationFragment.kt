@@ -53,16 +53,17 @@ class SelectLocationFragment : BaseFragment() {
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
         // TODO: Change the map type based on the user's selection.
-        R.id.normal_map -> {
+        R.id.aubergine_map -> {
+
             true
         }
-        R.id.hybrid_map -> {
+        R.id.gray_map -> {
             true
         }
-        R.id.satellite_map -> {
+        R.id.retro_map -> {
             true
         }
-        R.id.terrain_map -> {
+        R.id.dark_map -> {
             true
         }
         else -> super.onOptionsItemSelected(item)
