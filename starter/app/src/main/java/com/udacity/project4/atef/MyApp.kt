@@ -2,6 +2,7 @@ package com.udacity.project4.atef
 
 import android.app.Application
 import com.udacity.project4.atef.authentication.AuthenticationViewModel
+import com.udacity.project4.atef.authentication.sharedPrefs.MyPrefs
 import com.udacity.project4.atef.locationreminders.data.ReminderDataSource
 import com.udacity.project4.atef.locationreminders.data.local.LocalDB
 import com.udacity.project4.atef.locationreminders.data.local.RemindersLocalRepository
@@ -12,10 +13,27 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
 
+
+val prefs: MyPrefs by lazy {
+    MyApp.prefs!!
+}
+
 class MyApp : Application() {
+
+    companion object {
+        var prefs: MyPrefs? = null
+        lateinit var instance: MyApp
+            private set
+    }
 
     override fun onCreate() {
         super.onCreate()
+
+        /*
+        global sharedPrefs
+         */
+        instance=this
+        prefs=MyPrefs(applicationContext)
 
         /**
          * use Koin Library as a service locator

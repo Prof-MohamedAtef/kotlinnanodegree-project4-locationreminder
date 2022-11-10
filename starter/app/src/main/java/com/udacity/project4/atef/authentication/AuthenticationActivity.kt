@@ -12,6 +12,7 @@ import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.IdpResponse
 import com.udacity.project4.atef.R
 import com.udacity.project4.atef.locationreminders.RemindersActivity
+import com.udacity.project4.atef.prefs
 import com.udacity.project4.atef.utils.Config
 import com.udacity.project4.atef.utils.Config.SIGN_IN_INTENT_RESULT_CODE
 import org.koin.android.ext.android.inject
@@ -28,19 +29,22 @@ class AuthenticationActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_authentication)
 
-        findViewById<Button>(R.id.btnSignIn).setOnClickListener { launchGoogleSignInIntent() }
+        if (prefs.UserName!=null){
+            goToReminderActivity()
+        }else{
+            findViewById<Button>(R.id.btnSignIn).setOnClickListener { launchGoogleSignInIntent() }
 
-
-        authenticationViewModel.authenticationState.observe(this, Observer { state->
-            when(state){
-                Config.AuthenticationState.AUTHENTICATED->{
-                    goToReminderActivity()
+            authenticationViewModel.authenticationState.observe(this, Observer { state->
+                when(state){
+                    Config.AuthenticationState.AUTHENTICATED->{
+                        goToReminderActivity()
+                    }
+                    else->{
+                        Log.e("FirebaseAuthState", "User not authenticated: $state")
+                    }
                 }
-                else->{
-                    Log.e("FirebaseAuthState", "User not authenticated: $state")
-                }
-            }
-        })
+            })
+        }
     }
 
     private fun goToReminderActivity() {
@@ -70,6 +74,7 @@ class AuthenticationActivity : AppCompatActivity() {
         if (requestCode == SIGN_IN_INTENT_RESULT_CODE) {
             val response = IdpResponse.fromResultIntent(data)
             if (resultCode == Activity.RESULT_OK) {
+                prefs.UserName=response?.email.toString()
                 goToReminderActivity()
             } else {
                 Log.e("Authentication Error", response?.error.toString())

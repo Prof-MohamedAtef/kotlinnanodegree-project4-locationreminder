@@ -15,6 +15,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.udacity.project4.atef.R
 import com.udacity.project4.atef.authentication.AuthenticationActivity
 import com.udacity.project4.atef.authentication.AuthenticationViewModel
+import com.udacity.project4.atef.prefs
 import com.udacity.project4.atef.utils.Config
 import kotlinx.android.synthetic.main.activity_reminders.*
 import org.koin.android.ext.android.inject
@@ -44,6 +45,7 @@ class RemindersActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.logout-> {
+                prefs.clearPrefs()
                 goToAuthenticationActivity()
                 return true
             }
