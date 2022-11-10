@@ -12,6 +12,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
+import com.google.firebase.auth.FirebaseAuth
 import com.udacity.project4.atef.R
 import com.udacity.project4.atef.authentication.AuthenticationActivity
 import com.udacity.project4.atef.authentication.AuthenticationViewModel
@@ -46,6 +47,7 @@ class RemindersActivity : AppCompatActivity() {
         when (item.itemId) {
             R.id.logout-> {
                 prefs.clearPrefs()
+                FirebaseAuth.getInstance().signOut()
                 goToAuthenticationActivity()
                 return true
             }
