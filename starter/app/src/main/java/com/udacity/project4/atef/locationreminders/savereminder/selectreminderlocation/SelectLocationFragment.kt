@@ -11,8 +11,6 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.MapStyleOptions
-import com.udacity.project4.atef.BuildConfig
-import com.udacity.project4.atef.BuildConfig.MAPS_API_KEY
 import com.udacity.project4.atef.BuildConfig.MAPS_API_KEY_PAID
 import com.udacity.project4.atef.R
 import com.udacity.project4.atef.base.BaseFragment
@@ -94,6 +92,5 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     override fun onMapReady(map: GoogleMap?) {
         mMap=map
         mMap?.setMapStyle(MapStyleOptions.loadRawResourceStyle(context, R.raw.gray_map_style))
-
     }
 }

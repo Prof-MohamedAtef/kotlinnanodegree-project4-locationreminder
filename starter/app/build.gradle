@@ -11,7 +11,6 @@ localProperties.load(new FileInputStream(localPropertiesFile))
 
 android {
     compileSdkVersion rootProject.compileSdkVersion
-    buildToolsVersion "29.0.2"
 
     defaultConfig {
         applicationId "com.udacity.project4.atef"
@@ -20,13 +19,19 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        buildConfigField "String", "MAPS_API_KEY", localProperties['MAPS_API_KEY']
         buildConfigField "String", "MAPS_API_KEY_PAID", localProperties['MAPS_API_KEY_PAID']
+        manifestPlaceholders = [MAPS_API_KEY_PAID: localProperties['MAPS_API_KEY_PAID']]
     }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [MAPS_API_KEY_PAID: localProperties['MAPS_API_KEY_PAID']]
+        }
+        debug{
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            manifestPlaceholders = [MAPS_API_KEY_PAID: localProperties['MAPS_API_KEY_PAID']]
         }
     }
     kotlinOptions {
