@@ -76,19 +76,19 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
-        R.id.aubergine_map -> {
+        R.id.hybrid_map -> {
             mMap?.mapType=GoogleMap.MAP_TYPE_HYBRID
             true
         }
-        R.id.gray_map -> {
+        R.id.normal_map -> {
             mMap?.mapType=GoogleMap.MAP_TYPE_NORMAL
             true
         }
-        R.id.retro_map -> {
+        R.id.terrain_map -> {
             mMap?.mapType=GoogleMap.MAP_TYPE_TERRAIN
             true
         }
-        R.id.dark_map -> {
+        R.id.satellite_map -> {
             mMap?.mapType=GoogleMap.MAP_TYPE_SATELLITE
             true
         }
