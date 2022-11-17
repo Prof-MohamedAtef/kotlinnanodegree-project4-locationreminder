@@ -7,7 +7,7 @@ import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 
-val REQUEST_PERMISSION_REQUEST_CODE = 1010;
+val REQUEST_PERMISSION_CODE = 1010;
 
 val FOREGROUND_LOCATION_PERMISSIONS = listOf(
     Manifest.permission.ACCESS_COARSE_LOCATION,
@@ -23,7 +23,7 @@ val BACKGROUND_LOCATION_PERMISSION =
 @RequiresApi(Build.VERSION_CODES.M)
 fun Activity.requestMissingPermissions(
     permissions: List<String>,
-    requestCode: Int = REQUEST_PERMISSION_REQUEST_CODE
+    requestCode: Int = REQUEST_PERMISSION_CODE
 ) {
     requestPermissions(
         (permissions.filter {
@@ -36,7 +36,7 @@ fun Activity.requestMissingPermissions(
 @RequiresApi(Build.VERSION_CODES.M)
 fun Fragment.requestMissingPermissions(
     permissions: List<String>,
-    requestCode: Int = REQUEST_PERMISSION_REQUEST_CODE
+    requestCode: Int = REQUEST_PERMISSION_CODE
 ) {
     requestPermissions(
         (permissions.filter {

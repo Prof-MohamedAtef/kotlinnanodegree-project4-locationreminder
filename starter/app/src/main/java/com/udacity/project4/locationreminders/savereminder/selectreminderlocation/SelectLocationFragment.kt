@@ -1,11 +1,14 @@
 package com.udacity.project4.locationreminders.savereminder.selectreminderlocation
 
+import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.*
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
+import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -16,12 +19,9 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.udacity.project4.BuildConfig.MAPS_API_KEY_PAID
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
-import com.udacity.project4.utils.FOREGROUND_LOCATION_PERMISSIONS
-import com.udacity.project4.utils.anyPermissionsGranted
-import com.udacity.project4.utils.requestMissingPermissions
-import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import com.udacity.project4.databinding.FragmentSelectLocationBinding
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
+import com.udacity.project4.utils.*
 import org.koin.android.ext.android.inject
 
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
@@ -55,14 +55,39 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
         Log.d("PAID Maps key is:","${MAPS_API_KEY_PAID}")
 
-//        TODO: zoom to the user location after taking his permission
-//        TODO: add style to the map
+
 //        TODO: put a marker to location that the user selected
 
 //        TODO: call this function after the user confirms on the selected location
         onLocationSelected()
 
         return binding.root
+    }
+
+    @SuppressLint("MissingPermission")
+    @RequiresApi(Build.VERSION_CODES.M)
+    fun checkGrantedLocation(){
+        if (anyPermissionsGranted(FOREGROUND_LOCATION_PERMISSIONS)){
+            mMap?.isMyLocationEnabled=true
+
+            val fusedLocationProvider=LocationServices.getFusedLocationProviderClient(requireActivity())
+
+            val location=fusedLocationProvider.lastLocation
+
+            location.addOnCompleteListener {
+                if (it.isSuccessful) it.result?.let { location ->
+                    mMap?.moveCamera(
+                        CameraUpdateFactory.newLatLngZoom(
+                            LatLng(
+                                location.latitude,
+                                location.longitude
+                            ),
+                            16f
+                        )
+                    )
+                }
+            }
+        }
     }
 
     private fun onLocationSelected() {
@@ -95,16 +120,31 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         else -> super.onOptionsItemSelected(item)
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onMapReady(map: GoogleMap) {
         mMap=map
         mMap?.setMapStyle(context?.let { MapStyleOptions.loadRawResourceStyle(it, R.raw.gray_map_style) })
 
-        val sydney = LatLng((-34).toDouble(), (130).toDouble())
-        mMap!!.addMarker(
-            MarkerOptions()
-                .position(sydney)
-                .title("Marker in Sydney")
-        )
-        mMap!!.moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        // TODO is Done: zoom to the user location after taking his permission
+        checkGrantedLocation()
+
+
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        if (requestCode== REQUEST_PERMISSION_CODE){
+            if (permissions.filter { FOREGROUND_LOCATION_PERMISSIONS.contains(it) }
+                    .any{ grantResults[permissions.indexOf(it)]==PackageManager.PERMISSION_GRANTED }
+            ){
+                checkGrantedLocation()
+            }else{
+                // show permission denied message
+            }
+        }
     }
 }
