@@ -56,8 +56,6 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         Log.d("PAID Maps key is:","${MAPS_API_KEY_PAID}")
 
 
-//        TODO: put a marker to location that the user selected
-
 //        TODO: call this function after the user confirms on the selected location
         onLocationSelected()
 
@@ -125,9 +123,16 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         mMap=map
         mMap?.setMapStyle(context?.let { MapStyleOptions.loadRawResourceStyle(it, R.raw.gray_map_style) })
 
-        // TODO is Done: zoom to the user location after taking his permission
         checkGrantedLocation()
 
+        mMap?.setOnMapClickListener { latLng ->
+            mMap?.clear()
+
+            val selectedLocationMarker=mMap?.addMarker(MarkerOptions().position(latLng).title(latLng.toString()))
+            selectedLocationMarker?.showInfoWindow()
+
+
+        }
 
     }
 
