@@ -35,7 +35,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private var mMap: GoogleMap?=null
     private var selectedPoi:PointOfInterest?=null
 
-    private val testingPoi:List<PointOfInterest> by inject()
+//    private val testingPoi:List<PointOfInterest> by inject()
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
@@ -64,12 +64,13 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             onLocationSelected()
         }
 
+        // TODO: testing purpose using join
         /*
         for testing, fill selectedPoi with first element in list
          */
-        if (testingPoi.isNotEmpty()){
-            selectedPoi=testingPoi.first()
-        }
+//        if (testingPoi.isNotEmpty()){
+//            selectedPoi=testingPoi.first()
+//        }
 
         return binding.root
     }
