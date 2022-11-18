@@ -35,6 +35,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     private var mMap: GoogleMap?=null
     private var selectedPoi:PointOfInterest?=null
 
+    private val testingPoi:List<PointOfInterest> by inject()
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
@@ -61,6 +62,13 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
         binding.savePoi.setOnClickListener { view->
             onLocationSelected()
+        }
+
+        /*
+        for testing, fill selectedPoi with first element in list
+         */
+        if (testingPoi.isNotEmpty()){
+            selectedPoi=testingPoi.first()
         }
 
         return binding.root
@@ -151,14 +159,12 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         mMap?.setOnPoiClickListener { poi ->
             mMap?.clear()
 
-            val marker=mMap?.addMarker(MarkerOptions().position(poi.latLng).title(poi.name))
+            val marker = mMap?.addMarker(MarkerOptions().position(poi.latLng).title(poi.name))
 
             marker?.showInfoWindow()
 
-            selectedPoi=poi
+            selectedPoi = poi
         }
-
-
     }
 
     @RequiresApi(Build.VERSION_CODES.M)
