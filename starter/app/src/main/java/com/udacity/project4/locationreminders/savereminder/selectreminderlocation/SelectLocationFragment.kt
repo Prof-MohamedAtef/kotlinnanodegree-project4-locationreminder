@@ -16,6 +16,7 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.MarkerOptions
+import com.google.android.gms.maps.model.PointOfInterest
 import com.udacity.project4.BuildConfig.MAPS_API_KEY_PAID
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
@@ -26,11 +27,13 @@ import org.koin.android.ext.android.inject
 
 class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
-    private var mMap: GoogleMap?=null
-
     //Use Koin to get the view model of the SaveReminder
     override val _viewModel: SaveReminderViewModel by inject()
     private lateinit var binding: FragmentSelectLocationBinding
+
+    private var mMap: GoogleMap?=null
+    private var selectedPoi:PointOfInterest?=null
+
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onCreateView(
@@ -55,9 +58,9 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
 
         Log.d("PAID Maps key is:","${MAPS_API_KEY_PAID}")
 
-
-//        TODO: call this function after the user confirms on the selected location
-        onLocationSelected()
+        binding.savePoi.setOnClickListener { view->
+            onLocationSelected()
+        }
 
         return binding.root
     }
@@ -92,6 +95,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
         //        TODO: When the user confirms on the selected location,
         //         send back the selected location details to the view model
         //         and navigate back to the previous fragment to save the reminder and add the geofence
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -121,6 +125,7 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onMapReady(map: GoogleMap) {
         mMap=map
+
         mMap?.setMapStyle(context?.let { MapStyleOptions.loadRawResourceStyle(it, R.raw.gray_map_style) })
 
         checkGrantedLocation()
@@ -129,10 +134,22 @@ class SelectLocationFragment : BaseFragment(), OnMapReadyCallback {
             mMap?.clear()
 
             val selectedLocationMarker=mMap?.addMarker(MarkerOptions().position(latLng).title(latLng.toString()))
+
             selectedLocationMarker?.showInfoWindow()
 
-
+            selectedPoi=PointOfInterest(latLng, latLng.toString(), latLng.toString())
         }
+
+        mMap?.setOnPoiClickListener { poi ->
+            mMap?.clear()
+
+            val marker=mMap?.addMarker(MarkerOptions().position(poi.latLng).title(poi.name))
+
+            marker?.showInfoWindow()
+
+            selectedPoi=poi
+        }
+
 
     }
 
