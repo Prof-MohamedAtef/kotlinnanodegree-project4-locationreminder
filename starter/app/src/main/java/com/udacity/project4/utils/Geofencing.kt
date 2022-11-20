@@ -54,7 +54,7 @@ fun addGeofencingRequest(context: Context, reminder: ReminderDataItem): Boolean 
     geofencingClient.addGeofences(geofencingRequest, pendingIntent)?.run {
         addOnSuccessListener {
             Toast.makeText(context, R.string.geofence_added,Toast.LENGTH_LONG).show()
-            Log.d("Add Geofence", geofence.requestId)
+            Log.d("SaveReminderGeofencing","Add Geofence no. "+ geofence.requestId)
         }
         addOnFailureListener {
             Toast.makeText(context, R.string.geofences_not_added,Toast.LENGTH_LONG).show()
@@ -63,7 +63,6 @@ fun addGeofencingRequest(context: Context, reminder: ReminderDataItem): Boolean 
             }
         }
     }
-
     return true
 }
 

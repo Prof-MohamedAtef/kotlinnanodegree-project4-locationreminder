@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.IntentSender
 import android.content.pm.PackageManager
-import android.location.Location
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -81,7 +80,7 @@ class SaveReminderFragment : BaseFragment() {
         if (allPermissionsGranted(BACKGROUND_LOCATION_PERMISSION) &&
             anyPermissionsGranted(FOREGROUND_LOCATION_PERMISSIONS)
         ) {
-            geoFenceLocalDBSaved {
+            checkLocationSettingsEnabled {
                 addGeofencingRequest(requireContext(), reminder)
                 _viewModel.validateAndSaveReminder(reminder)
             }
@@ -89,10 +88,27 @@ class SaveReminderFragment : BaseFragment() {
             val permission = BACKGROUND_LOCATION_PERMISSION + FOREGROUND_LOCATION_PERMISSIONS
             requestMissingPermissions(permission)
         }
-
     }
 
-    private fun geoFenceLocalDBSaved(function: () -> Unit) {
+    @RequiresApi(Build.VERSION_CODES.M)
+    override fun onStart() {
+        super.onStart()
+        if (allPermissionsGranted(BACKGROUND_LOCATION_PERMISSION)&&
+                anyPermissionsGranted(FOREGROUND_LOCATION_PERMISSIONS)){
+            checkLocationSettingsEnabled { null }
+        }else{
+            requestForegroundAndBackgroundLocationPermissions()
+        }
+    }
+
+    @RequiresApi(Build.VERSION_CODES.M)
+    private fun requestForegroundAndBackgroundLocationPermissions() {
+        if (!anyPermissionsGranted(FOREGROUND_LOCATION_PERMISSIONS)) {
+            requestMissingPermissions(FOREGROUND_LOCATION_PERMISSIONS)
+        }
+    }
+
+    private fun checkLocationSettingsEnabled(function: () -> Unit) {
         val builder=
             LocationSettingsRequest.Builder().addLocationRequest(
                 LocationRequest.create().apply {
@@ -118,7 +134,7 @@ class SaveReminderFragment : BaseFragment() {
                         R.string.location_required_error,
                         Snackbar.LENGTH_INDEFINITE
                     ).setAction(android.R.string.ok) {
-                        geoFenceLocalDBSaved(function)
+                        checkLocationSettingsEnabled(function)
                     }.show()
                 }
             }
