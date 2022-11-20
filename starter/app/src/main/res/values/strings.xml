@@ -43,4 +43,5 @@
     <string name="error_adding_geofence">Error Happened, Can\'t Add Geofence</string>
     <string name="sign_in">Sign In</string>
     <string name="emailLogin">Email Login</string>
+    <string name="save_reminder">Save Reminder</string>
 </resources>
