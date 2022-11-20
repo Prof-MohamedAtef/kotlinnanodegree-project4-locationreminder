@@ -4,9 +4,12 @@ import android.annotation.SuppressLint
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
+import android.widget.Toast
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingRequest
 import com.google.android.gms.location.LocationServices
+import com.udacity.project4.R
 import com.udacity.project4.locationreminders.geofence.GeofenceBroadcastReceiver
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 
@@ -48,7 +51,18 @@ fun addGeofencingRequest(context: Context, reminder: ReminderDataItem): Boolean 
 
     val pendingIntent = geofencingPendingIntent(context, reminder.id)
 
-    geofencingClient.addGeofences(geofencingRequest, pendingIntent)
+    geofencingClient.addGeofences(geofencingRequest, pendingIntent)?.run {
+        addOnSuccessListener {
+            Toast.makeText(context, R.string.geofence_added,Toast.LENGTH_LONG).show()
+            Log.d("Add Geofence", geofence.requestId)
+        }
+        addOnFailureListener {
+            Toast.makeText(context, R.string.geofences_not_added,Toast.LENGTH_LONG).show()
+            if ((it.message!=null)){
+                Log.d("SaveReminderGeofencing",it.message!!)
+            }
+        }
+    }
 
     return true
 }
