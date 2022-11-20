@@ -7,6 +7,7 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -19,6 +20,7 @@ import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
+import com.google.android.material.snackbar.Snackbar
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
@@ -87,6 +89,7 @@ class SaveReminderFragment : BaseFragment() {
             val permission = BACKGROUND_LOCATION_PERMISSION + FOREGROUND_LOCATION_PERMISSIONS
             requestMissingPermissions(permission)
         }
+
     }
 
     private fun geoFenceLocalDBSaved(function: () -> Unit) {
@@ -110,13 +113,26 @@ class SaveReminderFragment : BaseFragment() {
                         null, 0, 0, 0, null
                     )
                 }catch (sendEx: IntentSender.SendIntentException){
-                    // catch exception
+                    Snackbar.make(
+                        requireView(),
+                        R.string.location_required_error,
+                        Snackbar.LENGTH_INDEFINITE
+                    ).setAction(android.R.string.ok) {
+                        geoFenceLocalDBSaved(function)
+                    }.show()
                 }
             }
         }
 
         task.addOnCompleteListener{
-            if (it.isSuccessful) function()
+            if (it.isSuccessful){
+                Log.i("CheckDeviceLocation", "Granted")
+                Snackbar.make(
+                    requireView(),
+                    R.string.location_granted,
+                    Snackbar.LENGTH_INDEFINITE
+                ).show()
+            }
         }
     }
 
