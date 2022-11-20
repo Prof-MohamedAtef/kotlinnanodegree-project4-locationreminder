@@ -132,7 +132,7 @@ class SaveReminderFragment : BaseFragment() {
                     Snackbar.make(
                         requireView(),
                         R.string.location_required_error,
-                        Snackbar.LENGTH_INDEFINITE
+                        Snackbar.LENGTH_LONG
                     ).setAction(android.R.string.ok) {
                         checkLocationSettingsEnabled(function)
                     }.show()
@@ -146,8 +146,9 @@ class SaveReminderFragment : BaseFragment() {
                 Snackbar.make(
                     requireView(),
                     R.string.location_granted,
-                    Snackbar.LENGTH_INDEFINITE
+                    Snackbar.LENGTH_LONG
                 ).show()
+                function()
             }
         }
     }
