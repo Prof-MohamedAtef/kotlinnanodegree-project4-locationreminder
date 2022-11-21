@@ -25,6 +25,7 @@ class ReminderDescriptionActivity : AppCompatActivity() {
         }
     }
 
+    private lateinit var intent_: ReminderDataItem
     private lateinit var binding: ActivityReminderDescriptionBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,6 +33,16 @@ class ReminderDescriptionActivity : AppCompatActivity() {
             this,
             R.layout.activity_reminder_description
         )
-//        TODO: Add the implementation of the reminder details
+
+        intent_ = intent.getSerializableExtra(EXTRA_ReminderDataItem) as ReminderDataItem
+        binding.reminderDataItem = intent_
+
+
+        supportFragmentManager.beginTransaction()
+            .replace(
+                R.id.frameMapView, ReminderDescriptionMapFragment.newInstance(
+                    intent_.latitude.toString(), intent_.longitude.toString()
+                )
+            ).commitAllowingStateLoss()
     }
 }
