@@ -25,9 +25,11 @@ import com.udacity.project4.utils.requestMissingPermissions
 
 private const val ARG_PARAM1_Latitude = "Latitude"
 private const val ARG_PARAM2_Longitude = "Longitude"
+private const val ARG_PARAM3_Title = "Title"
 
 class ReminderDescriptionMapFragment : Fragment(), OnMapReadyCallback {
 
+    private var title: String?=null
     private var longitude: String?=null
     private var latitude: String?=null
     private var mMap: GoogleMap?=null
@@ -51,16 +53,19 @@ class ReminderDescriptionMapFragment : Fragment(), OnMapReadyCallback {
 
         latitude= arguments?.get(ARG_PARAM1_Latitude) as String?
         longitude= arguments?.get(ARG_PARAM2_Longitude) as String?
+        title=arguments?.get(ARG_PARAM3_Title) as String?
+
         return binding.root
     }
 
     companion object {
         @JvmStatic
-        fun newInstance(latitude: String, longitude: String) =
+        fun newInstance(latitude: String, longitude: String, title: String) =
             ReminderDescriptionMapFragment().apply {
                 arguments = Bundle().apply {
                     putString(ARG_PARAM1_Latitude, latitude)
                     putString(ARG_PARAM2_Longitude, longitude)
+                    putString(ARG_PARAM3_Title, title)
                 }
             }
     }
@@ -82,7 +87,7 @@ class ReminderDescriptionMapFragment : Fragment(), OnMapReadyCallback {
         }
 
 
-        val selectedLocationMarker=mMap?.addMarker(MarkerOptions().position(latLng()))
+        val selectedLocationMarker=mMap?.addMarker(MarkerOptions().position(latLng()).title(title))
         selectedLocationMarker?.showInfoWindow()
     }
 

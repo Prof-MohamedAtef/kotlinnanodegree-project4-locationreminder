@@ -41,7 +41,7 @@ class ReminderDescriptionActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .replace(
                 R.id.frameMapView, ReminderDescriptionMapFragment.newInstance(
-                    intent_.latitude.toString(), intent_.longitude.toString()
+                    intent_.latitude.toString(), intent_.longitude.toString(), intent_.title.toString()
                 )
             ).commitAllowingStateLoss()
     }
