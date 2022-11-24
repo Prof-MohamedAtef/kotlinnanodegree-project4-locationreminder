@@ -116,4 +116,59 @@ class SaveReminderViewModelTest {
 
         assertThat(saveReminderViewModel.showLoading.getOrAwaitValue(), `is`(false))
     }
+
+    @Test
+    fun assertDataIsCorrect() {
+        // GIVEN - A valid data item
+        var dataItem = ReminderDataItem(
+            "ReminderDataTitle",
+            "ReminderDataDescription",
+            "ReminderDataLocation",
+            31.658742,
+            30.32598,
+            "1"
+        )
+        // WHEN - Try to validate it
+        var result = saveReminderViewModel.validateEnteredData(dataItem)
+
+        // THEN - Should return true and showSnackBarInt should be null
+        assert(result)
+        assert(saveReminderViewModel.showSnackBar.value == null)
+
+        // GIVEN - A data item with invalid/null title
+        dataItem = ReminderDataItem(
+            null,
+            "ReminderDataDescription",
+            "ReminderDataLocation",
+            31.658742,
+            30.32598,
+            "1"
+        )
+
+        // WHEN - Try to validate it
+        result = saveReminderViewModel.validateEnteredData(dataItem)
+
+        // THEN - Should return false and showSnackBarInt should be R.string.err_enter_title
+        assert(!result)
+        assert(saveReminderViewModel.showSnackBarInt.getOrAwaitValue() == R.string.err_enter_title)
+
+
+        // GIVEN - A data item with invalid location
+        dataItem = ReminderDataItem(
+            "Cristo Redentor",
+            "Comer aquela feijoada",
+            null,
+            -22.951944,
+            -43.210556,
+            "2"
+        )
+
+        // WHEN - Try to validate it
+        result = saveReminderViewModel.validateEnteredData(dataItem)
+
+        // THEN - Should return false and showSnackBarInt should be R.string.err_select_location
+        assert(!result)
+        assert(saveReminderViewModel.showSnackBarInt.getOrAwaitValue() == R.string.err_select_location)
+
+    }
 }
