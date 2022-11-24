@@ -81,4 +81,24 @@ class RemindersListViewModelTest {
 
         assertThat(remindersListViewModel.showSnackBar.getOrAwaitValue(), `is`("testing error!"))
     }
+
+
+    @Test
+    fun check_loading() {
+        // GIVEN - set showLoading to null
+        assert(remindersListViewModel.showLoading.value == null)
+
+        // WHEN - Load reminders
+        mainCoroutineDispatcherRule.pauseDispatcher()
+        remindersListViewModel.loadReminders()
+
+        // THEN - show Loading indicator
+        assert(remindersListViewModel.showLoading.getOrAwaitValue())
+
+        // WHEN - Finished loading
+        mainCoroutineDispatcherRule.resumeDispatcher()
+
+        // THEN - Loading indication should be hide
+        assert(!remindersListViewModel.showLoading.getOrAwaitValue())
+    }
 }
