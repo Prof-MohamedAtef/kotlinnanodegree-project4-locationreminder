@@ -7,6 +7,9 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.local.FakeDataSource
+import com.udacity.project4.locationreminders.data.local.LocalDB
+import com.udacity.project4.locationreminders.data.local.RemindersLocalRepository
+import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.util.DataBindingIdlingResource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
@@ -39,8 +42,37 @@ class ReminderListFragmentTest {
         IdlingRegistry.getInstance().unregister(dataBindingIdlingResource)
     }
 
+    @Before
+    fun initRepo(){
+        stopKoin()//stop the original app koin
+        context = getApplicationContext()
+        val module= module {
+            //Declare a ViewModel - be later inject into Fragment with dedicated injector using by viewModel()
+            viewModel {
+                RemindersListViewModel(
+                    context,
+                    get() as ReminderDataSource
+                )
+            }
+            //Declare singleton definitions to be later injected using by inject()
+            single {
+                SaveReminderViewModel(
+                    context,
+                    get() as ReminderDataSource
+                )
+            }
+            single { RemindersLocalRepository(get()) as ReminderDataSource }
+            single { LocalDB.createRemindersDao(context) }
 
+        }
 
+        //declare a new koin module
+        startKoin {
+            modules(listOf(module))
+        }
+        //Get our real repository
+        repository = get()
+    }
 //    TODO: test the displayed data on the UI.
 //    TODO: add testing for the error messages.
 }
