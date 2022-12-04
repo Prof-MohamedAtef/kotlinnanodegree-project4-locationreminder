@@ -198,39 +198,14 @@ class RemindersActivityTest :
 
             onView(withText(R.string.geofence_added))
                 .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
+
+            Log.e("AtefTest", "Finished Testing")
+
+            // close activity
+            remindersActivity.close()
         } catch (e: NoMatchingViewException) {
             // View is not in hierarchy
             Log.e("Some Tests Failed", "Please Select a Point on map")
         }
-
-
-
-//        // check location granted snackBar
-//        onView(withText(R.string.location_granted))
-//            .check(matches(withEffectiveVisibility(Visibility.VISIBLE)))
-//        // perform click
-//        onView(withId(R.id.selectLocation)).perform(click())
-//        runBlocking { delay(1000) }
-//        Espresso.pressBack()
-//        onView(withId())
-//            .check(matches(withText(R.string.location_granted)))
-//        onView(withId(R.id.reminderTitle)).check(matches(isDisplayed()))
-//        onView(withId(R.id.reminderDescription)).check(matches(isDisplayed()))
-    // Check if select location name is displayed
-//        onView(withId(R.id.selectedLocation)).check(matches(withText(reminder.title)))
-    // Check if toast is shown and with R.string.reminder_saved
-    // Check if it was correctly displayed on the recyclerView and its items hasDescendant similar title, description, and location
-//        onView(withId(R.id.reminderssRecyclerView)).check(matches(isDisplayed()))
-//        onView(withId(R.id.reminderssRecyclerView)).check(matches(hasDescendant((withText(reminder.title)))))
-//        onView(withId(R.id.reminderssRecyclerView)).check(matches(hasDescendant((withText(reminder.description)))))
-//        onView(withId(R.id.reminderssRecyclerView)).check(matches(hasDescendant((withText(reminder.location)))))
-//
-//        onView(withText(R.string.geofence_added))
-//            .inRoot(withDecorView(Matchers.not(decorView)))// Here you use decorView
-//            .check(matches(isDisplayed()));
-//
-//        Log.e("AtefTest", "Finished Testing")
-//        // close activity
-//        remindersActivity.close()
     }
 }
