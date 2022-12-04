@@ -5,7 +5,7 @@ object Config {
     const val SIGN_IN_INTENT_RESULT_CODE=1000
     const val REQUEST_CHECK_SETTINGS: Int = 0x8a9
 
-    enum class AuthenticationState {
+    public enum class AuthenticationState {
         AUTHENTICATED, UNAUTHENTICATED
     }
 }

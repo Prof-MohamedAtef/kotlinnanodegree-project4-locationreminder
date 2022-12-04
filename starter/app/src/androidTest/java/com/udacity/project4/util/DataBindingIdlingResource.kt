@@ -23,6 +23,8 @@ import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.IdlingResource
+import com.udacity.project4.locationreminders.data.dto.ReminderDTO
+import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import java.util.UUID
 
 /**
@@ -107,5 +109,30 @@ fun DataBindingIdlingResource.monitorActivity(
 fun DataBindingIdlingResource.monitorFragment(fragmentScenario: FragmentScenario<out Fragment>) {
     fragmentScenario.onFragment {
         this.activity = it.requireActivity()
+    }
+}
+
+
+fun assertReminder(reference: ReminderDTO, given: ReminderDTO?) {
+    assert(given != null)
+    given?.let {
+        assert(it.id == reference.id)
+        assert(it.title == reference.title)
+        assert(it.description == reference.description)
+        assert(it.location == reference.location)
+        assert(it.latitude == reference.latitude)
+        assert(it.longitude == reference.longitude)
+    }
+}
+
+fun assertReminder(reference: ReminderDataItem, given: ReminderDataItem?) {
+    assert(given != null)
+    given?.let {
+        assert(it.id == reference.id)
+        assert(it.title == reference.title)
+        assert(it.description == reference.description)
+        assert(it.location == reference.location)
+        assert(it.latitude == reference.latitude)
+        assert(it.longitude == reference.longitude)
     }
 }
