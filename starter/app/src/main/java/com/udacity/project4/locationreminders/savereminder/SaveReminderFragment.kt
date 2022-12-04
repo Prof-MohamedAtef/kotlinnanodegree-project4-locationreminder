@@ -13,11 +13,7 @@ import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.databinding.DataBindingUtil
 import com.google.android.gms.common.api.ResolvableApiException
-import com.google.android.gms.location.LocationRequest
-import com.google.android.gms.location.LocationServices
-import com.google.android.gms.location.LocationSettingsRequest
-import com.google.android.gms.location.LocationSettingsResponse
-import com.google.android.gms.location.SettingsClient
+import com.google.android.gms.location.*
 import com.google.android.gms.tasks.Task
 import com.google.android.material.snackbar.Snackbar
 import com.udacity.project4.R
@@ -30,7 +26,7 @@ import com.udacity.project4.utils.Config.REQUEST_CHECK_SETTINGS
 import kotlinx.android.synthetic.main.fragment_save_reminder.*
 import org.koin.android.ext.android.inject
 
-class SaveReminderFragment : BaseFragment() {
+class SaveReminderFragment : BaseFragment(){
     //Get the view model this time as a single to be shared with the another fragment
     override val _viewModel: SaveReminderViewModel by inject()
     private lateinit var binding: FragmentSaveReminderBinding
@@ -46,9 +42,9 @@ class SaveReminderFragment : BaseFragment() {
         setTitle(getString(R.string.save_reminder))
 
         binding.viewModel = _viewModel
+
         return binding.root
     }
-
 
     @RequiresApi(Build.VERSION_CODES.M)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
